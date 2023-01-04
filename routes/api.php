@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
@@ -19,7 +19,12 @@ use App\Http\Controllers\ProductController;
 
 // Public routes
 
-Route::get('/products/', [ProductController::class, 'index']);
+// Auth
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+// Products
+Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/products/search/{name}', [ProductController::class, 'search']);
 
@@ -27,7 +32,11 @@ Route::get('/products/search/{name}', [ProductController::class, 'search']);
 
 // Protected routes
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/products/', [ProductController::class, 'store']);
+    // Auth
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Products
+    Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
-    Route::delete('/products/{id}', [ProductController::class, 'delete']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 });
